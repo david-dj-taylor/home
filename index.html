@@ -95,18 +95,18 @@
                     <h3>Instructions</h3>
                     <h5>
                         To use Intermittent EPANET, follow these steps. <hr  />
-                    1. Locate the suitable .inp file from your hydraulic modeling software that you would like to use. This interface also accepts equivalent .txt files. <br>
+                    1. Locate the network input file (.inp file) that you would like to convert from continuous to intermittent. Most hydraulic modeling software packages can export networks to .inp format. This interface also accepts equivalent .txt files. <br>
                     <img src="Screen Shot 2016-07-31 at 2.53.54 PM.png" alt="Example of acceptable .inp file" style="width:700px;height:700px;">
                     <p> Example of suitable .inp file</p>
 
-                    2. If you would like to customize your certain variables, type them in the textboxes under the <a href="#customize"; style = "color: #add8e6";>Customize</a> section. Simply type in the new value (no spaces or letters), and press "Enter Variable." Note that some sections are mandatory for the program to function. These variables are labeled as "MANDATORY."<br>
+                    2. If you would like to customize the assumptions used in the conversion, type them in the textboxes under the <a href="#customize"; style = "color: #add8e6";>Customize</a> section. Simply type in the new value (no spaces or letters), and press "Enter Variable." Note that some sections are mandatory for the program to function. These variables are labeled as "MANDATORY."<br>
                     3. Upload your suitable file under the <a href="#upload"; style="color: #add8e6";>Upload</a> section.<br>
                     4. Then press the create button under the <a href="#created"; style = "color: #add8e6";>Create</a> section and follow the download link to your new .inp file. <br>
                     <br>    
                     <hr  />
                     To learn about Intemittent EPANET, its purpose and methodology, refer to the about section below. <br>
                     <br>
-                        This code can be used by anyone who would like to, with permission of authors. The javascript was adapted <br> from certain python scripts to fit the web. For permission or any inquiries, please contact papostolicas18@nobles.edu. <br>
+                        This code can be used by anyone who would like to, with permission of authors; if you email us, permission is granted (even if we don't reply). The javascript was adapted by Paul <br> from David's python scripts to fit the web. For permission or any inquiries, please contact us [details below]. <br>
                     <br>
                         <p style="color: #add8e6";><b>Disclaimer: Neither Intermittent EPANET, the authors, or MIT are responsible for events stemming from use from this software. This software should be used with the understanding that it is in beta. Units from .inp files must be in LPS (Liters per Second).</b></p>
                         
@@ -116,7 +116,7 @@
                     <h3> About Intermittent EPANET</h3>
                     <p>
                     
-                    Intermittent EPANET is for engineers who use <a href = "https://www.epa.gov/water-research/epanet"; style = "color: #add8e6";>EPANET</a> to simulate water networks outside of the United States. In the United States, EPANET assumes that every customer gets as much water as they want, and solves for the network pressures to ensure that. However, the same is not true in some other countries. In these countries (such as India and other developing nations), customer consumption is strongly related to the pressure of water network. Therefore, this interface adapts your inputs into EPANET to model this. Please note that this technology is still in beta.
+                    Intermittent EPANET is for people interested in using <a href = "https://www.epa.gov/water-research/epanet"; style = "color: #add8e6";>EPANET</a> to simulate intermittently-operated neworks in which customer's use storage tanks.  Please note that this technology is still in beta.
                     </p>
 <!-----------------------------------------this is testing section for functions-------------------------------------------------->
                     <!-- here is where i want to add EPANETFUNCTIONS and EPANET Classes -->
@@ -167,7 +167,7 @@
                     </script>
 
 <!----------------------------------------------------------------------------------------------------------------------------------------->
-                    <h6>Enter the average roughness factor for existing pipes..</h6>
+                    <h6>Enter the average roughness factor for existing pipes.</h6>
                     <textarea id="textbox2">110</textarea> <button id="enter2">Enter Variable</button> <a download="info.txt" id="downloadlink2"                                           style="display: none"></a>
                     <p id = "pipeRoughHH"></p>
 
@@ -447,11 +447,11 @@
                     </script>
 <!-------------------------------------------------------------------------------------------------------------------------------------------->
                     <h6>The algorithm assumes some skeletonization has been done in the network model. It scales the parameters of the typical house given above by the number of houses that are combined at the node. To do this, an average household consumption value is needed (liters per household per day). </h6>
-                    <textarea id="textbox9">1100</textarea> <button id="enter9">Enter Variable</button> <a download="info.txt" id="downloadlink9" style="display: none"></a>
+                    <textarea id="textbox9">1000</textarea> <button id="enter9">Enter Variable</button> <a download="info.txt" id="downloadlink9" style="display: none"></a>
                     <p id = "HHDaily"></p>
 
                     <script>
-                        var HHDaily = 1100;
+                        var HHDaily = 1000;
 
                         (function () {
                             var textFile = null,
@@ -485,12 +485,12 @@
 
                     </script>
 <!-------------------------------------------------------------------------------------------------------------------------------------------->
-                    <h6> MANDATORY: The algorithm splits all demand nodes into three categories. The first category gets tanks at one elevation, the second gets tanks at a different elevation, and the third category is ignored. We use the first letter of the node’s name is determine which category it should go in. Category 1 nodes should start with this letter:</h6>
-                    <textarea id="textbox10">J</textarea> <button id="enter10">Enter Variable</button> <a download="info.txt" id="downloadlink10" style="display: none"></a>
-                    <p id = "Category1"></p>
+                    <h6> The algorithm splits all demand nodes into three categories. The first category is the default; customer tanks are created at one elevation, the second gets customer tanks at a different elevation (e.g., to allow for roof tanks), and the third category is ignored. The latter two categories at indicated by the first four letters of the node’s name. Category 2 nodes should start with these FOUR characters (e.g., ROOFJun1 would be in category 2 if ROOF were the four characters entered here):</h6>
+                    <textarea id="textbox10">ROOF</textarea> <button id="enter10">Enter Variable</button> <a download="info.txt" id="downloadlink10" style="display: none"></a>
+                    <p id = "Category2"></p>
 
                     <script>
-                        var Category1 = "J";
+                        var Category2 = "ROOF";
 
                         (function () {
                             var textFile = null,
@@ -512,24 +512,24 @@
                         enter10 = document.getElementById('enter10'),
                         textbox10 = document.getElementById('textbox10');
                             
-                        Category1 = textbox10.value;
+                        Category2 = textbox10.value;
 
                         enter10.addEventListener('click', function () {
                         var link = document.getElementById('downloadlink10');
                         link.href = makeTextFile(textbox10.value);
                         link.style.display = 'block';
-                        document.getElementById("Category1").innerHTML = "You entered: " + textbox10.value + " as the Category1.";
+                        document.getElementById("Category2").innerHTML = "You entered: " + textbox10.value + " as the Category2.";
                         }, false);
                         })();
 
                     </script>
 <!-- ---------------------->
-                    <h6> STRONGLY SUGGESTED: Category 2 nodes should start with this letter:</h6>
-                    <textarea id="textbox11">L</textarea> <button id="enter11">Enter Variable</button> <a download="info.txt" id="downloadlink11" style="display: none"></a>
-                    <p id = "Category2"></p>
+                    <h6> Category 3 nodes should start with thses FOUR characters (e.g., SKIPb1 would skip this junction if SKIP were the four characters):</h6>
+                    <textarea id="textbox11">SKIP</textarea> <button id="enter11">Enter Variable</button> <a download="info.txt" id="downloadlink11" style="display: none"></a>
+                    <p id = "Category3"></p>
 
                     <script>
-                        var Category2 = "L";
+                        var Category3 = "SKIP";
 
                         (function () {
                             var textFile = null,
@@ -551,20 +551,20 @@
                         enter11 = document.getElementById('enter11'),
                         textbox11 = document.getElementById('textbox11');
                             
-                        Category2 = textbox11.value;
+                        Category3 = textbox11.value;
 
                         enter11.addEventListener('click', function () {
                         var link = document.getElementById('downloadlink11');
                         link.href = makeTextFile(textbox10.value);
                         link.style.display = 'block';
-                        document.getElementById("Category2").innerHTML = "You entered: " + textbox11.value + " as the Category2.";
+                        document.getElementById("Category3").innerHTML = "You entered: " + textbox11.value + " as the Category3.";
                         }, false);
                         })();
 
                     </script>
 <!-- ---------------------->
 
-                    <h6>Category 1 nodes will have tanks placed at this height above the node’s elevation (m).</h6>
+                    <h6>Category 1 [the default] nodes will have tanks placed at this height above the node’s elevation (m).</h6>
                     <textarea id="textbox13">0</textarea> <button id="enter13">Enter Variable</button> <a download="info.txt" id="downloadlink13" style="display: none"></a>
                     <p id = "bpDepth"></p>
 
@@ -602,7 +602,7 @@
                         })();
 
                     </script>
-                    <h6>Category 2 nodes will have tanks placed at this height above the node’s elevation (m).</h6>
+                    <h6>Category 2 nodes will have tanks placed at this height above the node’s elevation (m); this allows roof tanks or customer pumps to be modeled.</h6>
                     <textarea id="textbox12">0</textarea> <button id="enter12">Enter Variable</button> <a download="info.txt" id="downloadlink12" style="display: none"></a>
                     <p id = "sdepth"></p>
 
@@ -1144,8 +1144,8 @@
                                 
                         bpDepth = parseFloat(textbox13.value);
                 
-                        Category1 = textbox10.value;
-                        Category2 = textbox11.value;
+                        Category2 = textbox10.value;
+                        Category3 = textbox11.value;
                         // end of input analysis
 
                         // ######################################################  
@@ -1223,12 +1223,21 @@
                         var KList=[];
                         var LList=[];
                         for (el in ARRAY_OF_JUNCTIONS){
-                            if (ARRAY_OF_JUNCTIONS[el].ID.substring(0,1) == Category1){
-                                LList.push(ARRAY_OF_JUNCTIONS[el].ID); //if not JP -> L-block -> valve
-                            } 
-                            else if (ARRAY_OF_JUNCTIONS[el].ID.substring(0,1) == Category2){
+							if (ARRAY_OF_JUNCTIONS[el].ID.length <4){
+								LList.push(ARRAY_OF_JUNCTIONS[el].ID); //then it can't be one of the other types, so its Category1
+							}
+							else if (ARRAY_OF_JUNCTIONS[el].ID.substring(0,4) == Category2){
                                 KList.push(ARRAY_OF_JUNCTIONS[el].ID); // else K-block -> no pumps but OHT
-                            }    
+                            } 
+                            else if (ARRAY_OF_JUNCTIONS[el].ID.substring(0,4) == Category3){
+                                // do nothing
+                            }  
+							else{
+								LList.push(ARRAY_OF_JUNCTIONS[el].ID); // if its not one of the other types, its Category1
+							}
+							
+								
+                            
                         }
                         //var HHDaily = 1100;
                         //var sdepth = 0;
@@ -1474,10 +1483,10 @@
                         <h3>About the Authors</h3>
                         <hr />
                         <p>
-                        <a href = "http://www.daviddtaylor.com/wp-content/uploads/2014/09/DTaylor_Resume1.pdf">David Taylor </a> is a PHD Candidate at the Massachusetts Institute of Technology "with experience and enthusiasm working in complex systems that benefit the poor. He is passionate about understanding how things connect and using engineering analysis to find leverage points that have meaningful impact. His research at the MIT Tata Center has focused on India’s urban water supply systems" (Tata Center Bio). For general inquries regarding the program's methodology, please contact David.                         
-                        
-                        <br />
-                        <p>Paul Apostolicas is a high school intern who works with David Taylor. Interested in computer science, Paul helped wrote the code for this web interface, and in the process learned about html, css, python, web frameworks, advanced javascript functions, and web hosting. Paul's hobbies include chess, cross-country running, tutoring, and international affairs. For questions regarding website functionality or glitches, please contact Paul. </p>
+                        <a href = "https://www.linkedin.com/in/david-taylor-29642a47">David Taylor </a> worked on this as part of his Ph.D. at the Massachusetts Institute of Technology, which focused on tools to manage intermittent water supplies. 
+						<br />
+                        <p>
+						<a href = "https://www.linkedin.com/in/paul-apostolicas-b69728137/">Paul Apostolicas </a>  was a high school intern who worked with David Taylor. Interested in computer science, Paul helped wrote the code for this web interface, and in the process learned about html, css, python, web frameworks, advanced javascript functions, and web hosting. Paul's hobbies include chess, cross-country running, tutoring, and international affairs. </p>
                         
                       
                     </div>
@@ -1485,10 +1494,10 @@
                         <h3>Contact Information</h3>
                         <hr />
                         <p>
-                        33 Massachusetts Avenue<br />
+                        77 Massachusetts Avenue<br />
                             Cambridge, MA<br />                          
                         Massachusetts Institute of Technology<br />
-                        Email: dtaylor@mit.edu, papostolicas18@nobles.edu<br />
+                        Email: daviddtaylor@alum.mit.edu, paul_apostolicas@college.harvard.edu<br />
                         </p>
                     </div> 
                     
